@@ -5,18 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="39e5e0ee-37a4-4238-a483-3818c24be1db" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/tcsswiggy/app/App.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/tcsswiggy/app/Customer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/tcsswiggy/app/DelPart.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/tcsswiggy/app/Dish.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/tcsswiggy/app/Kitchen.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tcsswiggyapp.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/tcsswiggy/app/Location.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/tcsswiggy/app/Review.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/tcsswiggy/app/Wallet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/tcsswiggy/app/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/tcsswiggy/app/App.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/tcsswiggy/app/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/tcsswiggy/app/Customer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/tcsswiggy/app/Dish.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/tcsswiggy/app/Dish.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/tcsswiggy/app/Kitchen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/tcsswiggy/app/Restro.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,18 +38,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="com.tcsswiggy.app" />
@@ -67,7 +63,9 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1667455156466</updated>
-      <workItem from="1667455158449" duration="1779000" />
+      <workItem from="1667455158449" duration="2435000" />
+      <workItem from="1667532154359" duration="1804000" />
+      <workItem from="1667779196710" duration="3996000" />
     </task>
     <servers />
   </component>
