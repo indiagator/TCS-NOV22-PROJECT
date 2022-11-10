@@ -2,13 +2,13 @@ package com.tcsswiggy.app;
 
 public class Location
 {
-    //GPS representation
-    public static String locationType = "xy";
+    String id;
     private float x; // instance variables
     float y;
 
-    public Location(float x, float y) // parameters
+    public Location(String id,float x, float y) // parameters
     {
+        this.id = id;
         this.x = x;
         this.y = y;
     }
@@ -29,4 +29,7 @@ public class Location
         return y;
     }
 
+    public String getId() {
+        return id;
+    }
 }

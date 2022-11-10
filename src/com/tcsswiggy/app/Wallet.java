@@ -12,5 +12,22 @@ public class Wallet {
         return balance;
     }
 
+    boolean deductPayment(int amnt)
+    {
+        if( balance > amnt)
+        {
+            balance -= amnt;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    void updataBalance(int amnt)
+    {
+        balance += amnt;
+    }
 
 }
