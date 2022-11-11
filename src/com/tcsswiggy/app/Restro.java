@@ -34,4 +34,15 @@ public class Restro {
     public Location getLocation() {
         return location;
     }
+
+    public String getRestroId() {
+        return restroId;
+    }
+
+    @Override
+    public String toString() {
+        return "Restro{" +
+                "restroname='" + restroname + '\'' +
+                '}';
+    }
 }

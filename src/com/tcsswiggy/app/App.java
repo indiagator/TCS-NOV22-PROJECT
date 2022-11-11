@@ -1,6 +1,7 @@
 package com.tcsswiggy.app;
 
 
+import com.tcsswiggy.exception.AbortOrderException;
 import com.tcsswiggy.exception.InvalidInputException;
 
 import java.io.BufferedReader;
@@ -8,6 +9,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /** Application Context*/
 public class App
@@ -89,8 +92,7 @@ public class App
         }
     }
 
-    void browse() throws InvalidInputException
-    {
+    void browse() throws InvalidInputException, AbortOrderException {
 
        try{
             System.out.println("****************************************");
@@ -107,7 +109,7 @@ public class App
                 }
             }
 
-            createOrder();
+            createOrder(null);
         }
        catch(ArrayIndexOutOfBoundsException e)
        {
@@ -130,11 +132,15 @@ public class App
         return result;
     }
 
-    public void createOrder() throws InvalidInputException {
+    public void createOrder(Restro[] restroList) throws InvalidInputException, AbortOrderException
+    {
+        if(restroList == null)
+        {
+            restroList = this.restroList;
+        }
+
         System.out.println("****************************************");
         System.out.println("Please choose the Restro and Dishes in this format | RestroId,DishId1,Qty1,DishId2,Qty2...");
-
-
 
         Scanner orderInput = new Scanner(System.in);
         String orderInputString = orderInput.next();
@@ -144,10 +150,7 @@ public class App
         OrderElement[] orderList = new OrderElement[10];
         int orderAmnt = 0;
 
-        System.out.println("Please confirm your Order");
-        System.out.println("****************************************");
-
-        System.out.println(this.restroList[(Integer.valueOf(restroId)-1)].getRestroname());
+        System.out.println(restroList[(Integer.valueOf(restroId)-1)].getRestroname());
 
         if(Integer.valueOf(restroId) > 9)
         {
@@ -159,9 +162,9 @@ public class App
 
             for (int orderCntr = 1, ordrListCntr = 0; orderCntr < orderInputData.length; orderCntr++)
             {
-                String dishId = this.restroList[(Integer.valueOf(restroId) - 1)].getMenu()[(Integer.valueOf(orderInputData[orderCntr]) - 1)].getDishId();
-                String dishName = this.restroList[(Integer.valueOf(restroId) - 1)].getMenu()[(Integer.valueOf(orderInputData[orderCntr]) - 1)].getDishName();
-                int dishPrice = this.restroList[(Integer.valueOf(restroId) - 1)].getMenu()[(Integer.valueOf(orderInputData[orderCntr]) - 1)].getPrice();
+                String dishId = restroList[(Integer.valueOf(restroId) - 1)].getMenu()[(Integer.valueOf(orderInputData[orderCntr]) - 1)].getDishId();
+                String dishName = restroList[(Integer.valueOf(restroId) - 1)].getMenu()[(Integer.valueOf(orderInputData[orderCntr]) - 1)].getDishName();
+                int dishPrice = restroList[(Integer.valueOf(restroId) - 1)].getMenu()[(Integer.valueOf(orderInputData[orderCntr]) - 1)].getPrice();
                 int dishQty = Integer.valueOf(orderInputData[++orderCntr]);
 
                 orderAmnt += dishPrice*dishQty;
@@ -180,7 +183,6 @@ public class App
             System.out.println("Do you want to send an error report to our developers on Moon");
         }
 
-
         System.out.println("****************************************");
         System.out.println("Make the Payment of INR "+orderAmnt+"? 1 - YES | 2 - NO");
         Scanner pymntInput = new Scanner(System.in);
@@ -188,18 +190,16 @@ public class App
 
         if( pymntInputInt == 1)
         {
-            if(makePayment(orderAmnt))
+            while(!makePayment(orderAmnt))
             {
-                deliverOrder();
+                rechargeWallet(orderAmnt);
             }
-            else
-            {
-                rechargeWalletMakePayment(orderAmnt);
-            }
+
+            deliverOrder();
         }
         else
         {
-            System.out.println("Alright you may Order later!");
+            throw new AbortOrderException("payment");
         }
     }
 
@@ -213,7 +213,7 @@ public class App
         else
         {
             System.out.println("Insufficient Wallet Balance, Please recharge");
-            rechargeWalletMakePayment(ordrAmnt);
+            //rechargeWalletMakePayment(ordrAmnt);
             return false;
         }
 
@@ -221,28 +221,121 @@ public class App
 
     void deliverOrder()
     {
-
+        System.out.println("Your Order is Delivered!");
     }
 
-    void  rechargeWalletMakePayment(int ordrAmnt)
-    {
-        System.out.println("Please enter the recharge amnt: ");
+    void  rechargeWallet(int ordrAmnt) throws AbortOrderException {
+        System.out.println("Do you want to Recharge you Wallet? : 1-Yes | 2-No");
         Scanner rechargeInput = new Scanner(System.in);
-        int rechargeAmnt = rechargeInput.nextInt();
+        String confirm = rechargeInput.next();
 
-        customer.getWallet().updataBalance(Integer.valueOf(rechargeAmnt));
+        if(Integer.valueOf(confirm) == 1)
+        {
+            System.out.println("Please enter the recharge amnt: ");
+            Scanner rechargeInputAmnt = new Scanner(System.in);
+            int rechargeAmnt = rechargeInputAmnt.nextInt();
+            customer.getWallet().updataBalance(Integer.valueOf(rechargeAmnt));
+        }
+        else
+        {
+            throw new AbortOrderException("recharge");
+        }
 
-        makePayment(ordrAmnt);
+
+
+        //makePayment(ordrAmnt);
 
     }
 
-    void search()
-    {
+    void search() throws InvalidInputException, AbortOrderException {
+        System.out.println("****************************************");
+        Scanner searchInput = new Scanner(System.in);
+        String searchString = searchInput.next();
+
+        StringBuilder searchRegEx= new StringBuilder();
+
+        for(char c: searchString.toCharArray())
+        {
+            String cObj = String.valueOf(c);
+            searchRegEx.append("[");
+            searchRegEx.append(cObj.toLowerCase());
+            searchRegEx.append(cObj.toUpperCase());
+            searchRegEx.append("]");
+        }
+
+        Pattern searchPattern = Pattern.compile(searchRegEx.toString());
+        System.out.println("The search Regular Expression we compiled is: "+searchPattern.toString());
+
+        Restro[] probRestro = new Restro[10];
+
+        for( int i = 0,proCntr=0 ; i < dishList.length && dishList[i] != null ; i++)
+        {
+            Matcher matcher = searchPattern.matcher(dishList[i].getDishName());
+
+            if( matcher.find() )
+            {
+                String restroId = dishList[i].getRestroId();
+
+                for( Restro restro : restroList)
+                {
+                    if (restro != null)
+                    {
+
+                        if (restro.getRestroId().equals(restroId))
+                        {
+                            boolean restroExists = false;
+
+                            for (Restro restroCheck : probRestro)
+                            {
+                                if (restroCheck == restro)
+                                {
+                                    restroExists = true;
+                                }
+                            }
+
+                            if (!restroExists)
+                            {
+                                probRestro[proCntr] = restro;
+                                proCntr++;
+
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+
+        int restroCntr = 0;
+        System.out.println("****************************************");
+
+        for(Restro restro : probRestro) // For Each Loop
+        {
+            if(restro!=null)
+            {
+                System.out.println((restroCntr + 1) + ". " + restro.getRestroname() + " Delivery Time: " + calcDelTime(this.customer.getLocation(), restro.getLocation()));
+
+                Dish[] tempMenu = restro.getMenu();
+
+                for (int menuCntr = 0; (menuCntr < tempMenu.length) && (tempMenu[menuCntr] != null); menuCntr++) {
+                    System.out.println((restroCntr + 1) + "." + (menuCntr + 1) + " " + tempMenu[menuCntr].getDishName() + " " + tempMenu[menuCntr].getPrice());
+                }
+
+                System.out.println("****************************************");
+
+            }
+            restroCntr++;
+
+        }
+
+
+        createOrder(probRestro);
 
     }
 
 
-    public static void main(String[] args) throws IOException,InvalidInputException { // throws specifies exceptions that may occur
+
+    public static void main(String[] args) throws IOException, InvalidInputException { // throws specifies exceptions that may occur
 
         // Create the App Context
         App mySwiggyApp = new App();
@@ -270,11 +363,28 @@ public class App
             } else {
                 System.out.println("invalid input");
             }
-        }catch(ArrayIndexOutOfBoundsException e)
+        }
+        catch(ArrayIndexOutOfBoundsException e)
         {
             System.out.println("The Exception was caught in the MAIN METHOD! "+e.getMessage());
         }
+        catch (AbortOrderException e)
+        {
+            switch (e.getReason())
+            {
+                case "recharge" : cancelOrder();break;
+                case "payment" : cancelOrder();break;
+                default: cancelOrder();break;
+            }
+        }
 
+
+    }
+
+    private static void cancelOrder() {
+
+        //Save Order Details to a File
+        System.out.println("Your Order is Cancelled");
 
     }
 }

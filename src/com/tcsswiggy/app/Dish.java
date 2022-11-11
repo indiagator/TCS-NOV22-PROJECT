@@ -63,5 +63,10 @@ public class Dish { // BluePrint for Dish Entity
         return tags;
     }
 
+    @Override
+    public String toString()
+    {
+        return dishName+" "+price;
+    }
 
 }
