@@ -1,21 +1,24 @@
 package com.tcsswiggy.app;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Restro {
 
     String restroId;
     String restroname;
     Location location;
 
-    Dish[] menu;
+    List<Dish> menu;
 
     Restro(String restroId, String restroname)
     {
         this.restroId = restroId;
         this.restroname = restroname;
-        this.menu = new Dish[10];
+        this.menu = new ArrayList<>();
     }
 
-    public void setMenu(Dish[] menu) {
+    public void setMenu(List<Dish> menu) {
         this.menu = menu;
     }
 
@@ -27,7 +30,7 @@ public class Restro {
         return restroname;
     }
 
-    public Dish[] getMenu() {
+    public List<Dish> getMenu() {
         return menu;
     }
 

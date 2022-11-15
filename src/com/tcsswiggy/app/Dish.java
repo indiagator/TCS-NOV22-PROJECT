@@ -1,12 +1,15 @@
 package com.tcsswiggy.app;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Dish { // BluePrint for Dish Entity
 
     String restroId;
     String dishId;
     String dishName;
     int price;
-    Review[] reviews;
+    List<Review> reviews;
     String description;
     int qty; // in grams
     boolean vegNveg; // true - nveg | false - veg
@@ -20,7 +23,7 @@ public class Dish { // BluePrint for Dish Entity
         this.dishName = dishName;
         this.price = price;
 
-        reviews = new Review[10];
+        reviews = new ArrayList<>();
         tags = new String[5];
     }
 
@@ -43,7 +46,7 @@ public class Dish { // BluePrint for Dish Entity
         return restroId;
     }
 
-    public Review[] getReviews() {
+    public List<Review> getReviews() {
         return reviews;
     }
 

@@ -1,6 +1,5 @@
 package com.tcsswiggy.app;
 
-
 import com.tcsswiggy.exception.AbortOrderException;
 import com.tcsswiggy.exception.InvalidInputException;
 
@@ -8,18 +7,20 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /** Application Context*/
 public class App
 {
-
     Customer customer;
-    private Restro[] restroList = new Restro[10];
-    private Dish[] dishList = new Dish[100];
-    private Location[] locationList = new Location[10];
+    private List<Restro> restroList = new ArrayList<>();
+    private List<Dish> dishList = new ArrayList<>();
+    private List<Location> locationList = new ArrayList<>();
 
     App()
     {
@@ -34,32 +35,43 @@ public class App
         for( int restroCntr = 0 ;(line = restroReader.readLine()) != null ; restroCntr++ )
         {
             String[] restroData = line.split(",");
-            restroList[restroCntr] = new Restro(restroData[0],restroData[1]);
+            restroList.add(restroCntr, new Restro(restroData[0],restroData[1]));
 
-            Dish[] tempMenu = new Dish[10];
+            List<Dish> tempMenu = new ArrayList<>();
             Location tempLocation = null;
 
-            for( int menuCntr=0,localCntr = 0  ; (menuCntr < dishList.length) && (dishList[menuCntr] != null)  ;menuCntr++ ) // Parse the whole Dish List
-            {
-                if(  dishList[menuCntr].getRestroId().equals(restroData[0]) )
-                {
-                    tempMenu[localCntr] = dishList[menuCntr];
-                    localCntr++;
-                }
-            }
-            
-            for( int locationCounter=0 ;  (locationCounter < locationList.length) && (locationList[locationCounter] != null)  ; locationCounter++ )
-            {
-                if(locationList[locationCounter].getId().equals(restroData[0]))
-                {
-                    tempLocation = locationList[locationCounter];
-                }
-                
-            }           
-            
+            tempMenu = dishList.stream().filter(dish->dish.getRestroId().equals(restroData[0])).collect(Collectors.toList());
+            tempLocation = locationList.stream().filter(location -> location.getId().equals(restroData[0])).findFirst().get();
 
-            restroList[restroCntr].setMenu(tempMenu);
-            restroList[restroCntr].setLocation(tempLocation);
+            restroList.get(restroCntr).setMenu(tempMenu);
+            restroList.get(restroCntr).setLocation(tempLocation);
+
+
+
+            // for( int menuCntr=0,localCntr = 0  ; (menuCntr < dishList.size()) && (dishList.get(menuCntr) != null)  ;menuCntr++ ) // Parse the whole Dish List
+           // {
+              //  if(  dishList.get(menuCntr).getRestroId().equals(restroData[0]) )
+              //  {
+               //     tempMenu.add(localCntr, dishList.get(menuCntr)) ;1
+               //     localCntr++;
+               // }
+           // }
+
+
+            
+            //for( int locationCounter=0 ;  (locationCounter < locationList.size()) && (locationList.get(locationCounter) != null)  ; locationCounter++ )
+            //{
+               // if(locationList.get(locationCounter).getId().equals(restroData[0]))
+               // {
+               //     tempLocation = locationList.get(locationCounter);
+              //  }
+                
+           // }
+
+
+
+
+
 
         }
 
@@ -74,7 +86,7 @@ public class App
         for(  int dishCntr = 0  ;(line = dishReader.readLine()) != null; dishCntr++ )
         {
             String[] dishData = line.split(",");
-            dishList[dishCntr] = new Dish(dishData[0],dishData[1],dishData[2],Integer.valueOf(dishData[3]) );
+            dishList.add(dishCntr, new Dish(dishData[0],dishData[1],dishData[2],Integer.valueOf(dishData[3]) ) );
         }
 
     }
@@ -88,8 +100,9 @@ public class App
         for( int locationCntr = 0;(line = locationreader.readLine()) != null; locationCntr++)
         {
             String[] locationData = line.split(",");
-            locationList[locationCntr] = new Location(locationData[0],Float.valueOf(locationData[1]),Float.valueOf(locationData[2]));
+           locationList.add(locationCntr, new Location(locationData[0],Float.valueOf(locationData[1]),Float.valueOf(locationData[2])));
         }
+
     }
 
     void browse() throws InvalidInputException, AbortOrderException {
@@ -98,16 +111,28 @@ public class App
             System.out.println("****************************************");
             System.out.println("Please choose Dishes from the Following Menu");
 
-            for (int restroCntr = 0; (restroCntr < restroList.length) && (restroList[restroCntr] != null); restroCntr++) {
+            for (int restroCntr = 0; (restroCntr < restroList.size()) && (restroList.get(restroCntr) != null); restroCntr++) {
                 System.out.println("****************************************");
-                Restro tempRestro = restroList[restroCntr];
-                Dish[] tempMenu = tempRestro.getMenu();
+                Restro tempRestro = restroList.get(restroCntr);
+                List<Dish> tempMenu = tempRestro.getMenu();
                 System.out.println((restroCntr + 1) + ". " + tempRestro.getRestroname() + " Delivery Time: " + calcDelTime(this.customer.getLocation(), tempRestro.getLocation()));
 
-                for (int menuCntr = 0; (menuCntr < tempMenu.length) && (tempMenu[menuCntr] != null); menuCntr++) {
-                    System.out.println((restroCntr + 1) + "." + (menuCntr + 1) + " " + tempMenu[menuCntr].getDishName() + " " + tempMenu[menuCntr].getPrice());
+                for (int menuCntr = 0; (menuCntr < tempMenu.size()) && (tempMenu.get(menuCntr) != null); menuCntr++) {
+                    System.out.println((restroCntr + 1) + "." + (menuCntr + 1) + " " + tempMenu.get(menuCntr).getDishName() + " " + tempMenu.get(menuCntr).getPrice());
                 }
             }
+
+            int restroCntr=0;
+            restroList.stream().forEach(restro -> {
+
+                System.out.println("****************************************");
+                List<Dish> tempMenu = restro.getMenu();
+                System.out.println((restroCntr + 1) + ". " + restro.getRestroname() + " Delivery Time: " + calcDelTime(this.customer.getLocation(), restro.getLocation()));
+
+                tempMenu.forEach(System.out.println((restroCntr + 1) + "." + (menuCntr + 1) + " " + tempMenu.get(menuCntr).getDishName() + " " + tempMenu.get(menuCntr).getPrice()));
+
+
+            });
 
             createOrder(null);
         }
@@ -132,7 +157,7 @@ public class App
         return result;
     }
 
-    public void createOrder(Restro[] restroList) throws InvalidInputException, AbortOrderException
+    public void createOrder(List<Restro> restroList) throws InvalidInputException, AbortOrderException
     {
         if(restroList == null)
         {
@@ -150,7 +175,7 @@ public class App
         OrderElement[] orderList = new OrderElement[10];
         int orderAmnt = 0;
 
-        System.out.println(restroList[(Integer.valueOf(restroId)-1)].getRestroname());
+        System.out.println(restroList.get((Integer.valueOf(restroId)-1)).getRestroname());
 
         if(Integer.valueOf(restroId) > 9)
         {
@@ -159,12 +184,11 @@ public class App
 
         try
         {
-
             for (int orderCntr = 1, ordrListCntr = 0; orderCntr < orderInputData.length; orderCntr++)
             {
-                String dishId = restroList[(Integer.valueOf(restroId) - 1)].getMenu()[(Integer.valueOf(orderInputData[orderCntr]) - 1)].getDishId();
-                String dishName = restroList[(Integer.valueOf(restroId) - 1)].getMenu()[(Integer.valueOf(orderInputData[orderCntr]) - 1)].getDishName();
-                int dishPrice = restroList[(Integer.valueOf(restroId) - 1)].getMenu()[(Integer.valueOf(orderInputData[orderCntr]) - 1)].getPrice();
+                String dishId = restroList.get((Integer.valueOf(restroId) - 1)).getMenu().get((Integer.valueOf(orderInputData[orderCntr]) - 1)).getDishId();
+                String dishName = restroList.get((Integer.valueOf(restroId) - 1)).getMenu().get((Integer.valueOf(orderInputData[orderCntr]) - 1)).getDishName();
+                int dishPrice = restroList.get((Integer.valueOf(restroId) - 1)).getMenu().get((Integer.valueOf(orderInputData[orderCntr]) - 1)).getPrice();
                 int dishQty = Integer.valueOf(orderInputData[++orderCntr]);
 
                 orderAmnt += dishPrice*dishQty;
@@ -173,7 +197,6 @@ public class App
 
                 orderList[ordrListCntr] = new OrderElement(dishId, dishQty);
                 ordrListCntr++;
-
             }
 
 
@@ -266,15 +289,15 @@ public class App
         Pattern searchPattern = Pattern.compile(searchRegEx.toString());
         System.out.println("The search Regular Expression we compiled is: "+searchPattern.toString());
 
-        Restro[] probRestro = new Restro[10];
+        List<Restro> probRestro = new ArrayList<>();
 
-        for( int i = 0,proCntr=0 ; i < dishList.length && dishList[i] != null ; i++)
+        for( int i = 0,proCntr=0 ; i < dishList.size() && dishList.get(i) != null ; i++)
         {
-            Matcher matcher = searchPattern.matcher(dishList[i].getDishName());
+            Matcher matcher = searchPattern.matcher(dishList.get(i).getDishName());
 
             if( matcher.find() )
             {
-                String restroId = dishList[i].getRestroId();
+                String restroId = dishList.get(i).getRestroId();
 
                 for( Restro restro : restroList)
                 {
@@ -295,7 +318,7 @@ public class App
 
                             if (!restroExists)
                             {
-                                probRestro[proCntr] = restro;
+                                probRestro.add(proCntr,restro);
                                 proCntr++;
 
                             }
@@ -315,10 +338,10 @@ public class App
             {
                 System.out.println((restroCntr + 1) + ". " + restro.getRestroname() + " Delivery Time: " + calcDelTime(this.customer.getLocation(), restro.getLocation()));
 
-                Dish[] tempMenu = restro.getMenu();
+                List<Dish> tempMenu = restro.getMenu();
 
-                for (int menuCntr = 0; (menuCntr < tempMenu.length) && (tempMenu[menuCntr] != null); menuCntr++) {
-                    System.out.println((restroCntr + 1) + "." + (menuCntr + 1) + " " + tempMenu[menuCntr].getDishName() + " " + tempMenu[menuCntr].getPrice());
+                for (int menuCntr = 0; (menuCntr < tempMenu.size()) && (tempMenu.get(menuCntr) != null); menuCntr++) {
+                    System.out.println((restroCntr + 1) + "." + (menuCntr + 1) + " " + tempMenu.get(menuCntr).getDishName() + " " + tempMenu.get(menuCntr).getPrice());
                 }
 
                 System.out.println("****************************************");
