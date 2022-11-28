@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="tcsswiggyapp:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/tcsswiggyapp_jar</output-path>
+    <root id="archive" name="tcsswiggyapp.jar">
+      <element id="module-output" name="tcsswiggyapp" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/src/json-simple-1.1.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

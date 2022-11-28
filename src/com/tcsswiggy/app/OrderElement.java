@@ -1,18 +1,20 @@
 package com.tcsswiggy.app;
 
-public class OrderElement {
+import java.io.Serializable;
 
-    String dishId;
+public class OrderElement implements Serializable {
+
+    Dish dish;
     int qty;
 
-    OrderElement(String dishId, int qty)
+    OrderElement(Dish dish, int qty)
     {
-        this.dishId = dishId;
+        this.dish = dish;
         this.qty = qty;
     }
 
-    public String getDishId() {
-        return dishId;
+    public Dish getDish() {
+        return dish;
     }
 
     public int getQty() {

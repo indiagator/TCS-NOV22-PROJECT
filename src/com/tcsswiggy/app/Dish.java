@@ -1,9 +1,10 @@
 package com.tcsswiggy.app;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Dish { // BluePrint for Dish Entity
+public class Dish implements Serializable { // BluePrint for Dish Entity
 
     String restroId;
     String dishId;
